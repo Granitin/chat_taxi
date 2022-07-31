@@ -1,6 +1,6 @@
 # chat_taxi
 
-A new Flutter project.
+Chat-Taxi
 
 ## Getting Started
 
