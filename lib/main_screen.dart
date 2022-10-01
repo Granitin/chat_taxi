@@ -179,7 +179,7 @@ class _MainScreenBody extends StatelessWidget {
                     );
                   },
                   child: const Text(
-                    'Написать разрабу',
+                    'Написать письмо',
                     style: TextStyle(color: Colors.black),
                   ),
                 ),
