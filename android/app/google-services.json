@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1033308151144",
+    "project_id": "chat-taxi-32082",
+    "storage_bucket": "chat-taxi-32082.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1033308151144:android:de08ba8bc5ec5981c24add",
+        "android_client_info": {
+          "package_name": "com.example.chat_taxi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1033308151144-7jdujvufatipaf2rpt3pg3qshg02jkin.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1LCp1ovpksRgbSeQR9bV-J_wVAM8O9ks"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1033308151144-7jdujvufatipaf2rpt3pg3qshg02jkin.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
