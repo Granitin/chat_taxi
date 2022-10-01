@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_print
 
-import 'package:chat_taxi/sounds_widget.dart';
 import 'package:chat_taxi/free_notes_screen.dart';
 import 'package:chat_taxi/make_new_note_screen.dart';
 import 'package:chat_taxi/my_note_screen.dart';
@@ -166,7 +165,7 @@ class _MainScreenBody extends StatelessWidget {
                   },
                   child: const Text(
                     'Правила Chat-Taxi',
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: Colors.red),
                   ),
                 ),
                 OutlinedButton(
