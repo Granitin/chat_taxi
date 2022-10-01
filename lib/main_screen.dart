@@ -165,7 +165,7 @@ class _MainScreenBody extends StatelessWidget {
                   },
                   child: const Text(
                     'Правила Chat-Taxi',
-                    style: TextStyle(color: Colors.red),
+                    style: TextStyle(color: Colors.black),
                   ),
                 ),
                 OutlinedButton(
