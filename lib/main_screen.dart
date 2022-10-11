@@ -23,34 +23,6 @@ class MyNoteController extends ChangeNotifier {
       print('error');
     }
   }
-
-  // Future<void> deleteThisNote() async {
-  //   final idNoteToDelete = FirebaseAuth.instance.currentUser?.uid;
-
-  //   await FirebaseFirestore.instance
-  //       .collection("notes")
-  //       .doc(idNoteToDelete)
-  //       .collection("chat_messages")
-  //       .get()
-  //       .then((value) {
-  //     for (var data in value.docs) {
-  //       FirebaseFirestore.instance
-  //           .collection("notes")
-  //           .doc(idNoteToDelete)
-  //           .collection("chat_messages")
-  //           .doc(data.id)
-  //           .delete()
-  //           .then((value) {
-  //         FirebaseFirestore.instance
-  //             .collection("notes")
-  //             .doc(idNoteToDelete)
-  //             .delete();
-  //       });
-  //     }
-  //   });
-
-  //   print('заявка удалена');
-  // }
 }
 
 class MainScreen extends StatelessWidget {
@@ -135,7 +107,6 @@ class _MainScreenBody extends StatelessWidget {
                   height: 10,
                 ),
                 const DriverRegistrationButton(),
-
                 const FreeNotesButton(),
                 const Text(
                   'для просмотра необходимо \n зарегистрироваться',
@@ -215,6 +186,8 @@ class MakeNewNoteButton extends StatelessWidget {
           ),
           onPressed: () async {
             mainScreenModel.authThisPassanger();
+
+            deleteMyNote();
 
             Navigator.push(
               context,

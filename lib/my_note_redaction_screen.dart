@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
+
 import 'package:chat_taxi/main_screen.dart';
 import 'package:chat_taxi/providers/make_note_provider.dart';
-import 'package:flutter/material.dart';
 
 class NoteRedactionFormWidget extends StatefulWidget {
   const NoteRedactionFormWidget({Key? key}) : super(key: key);
@@ -15,6 +16,18 @@ class _NoteRedactionFormWidgetState extends State<NoteRedactionFormWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final infoMyNote = ModalRoute.of(context)?.settings.arguments as List;
+
+    final uidNote = infoMyNote.elementAt(0);
+    final uidPassanger = infoMyNote.elementAt(1);
+    final uidDriverToChat = infoMyNote.elementAt(2);
+    final adressFrom = infoMyNote.elementAt(3);
+    final adressToGo = infoMyNote.elementAt(4);
+    final childrenCount = infoMyNote.elementAt(5);
+    final whatAnimal = infoMyNote.elementAt(6);
+    final remark = infoMyNote.elementAt(7);
+    final passangerPrice = infoMyNote.elementAt(8);
+
     return NoteFormModelProvider(
       model: _model,
       child: const _NoteRedactionFormBody(),
@@ -30,16 +43,6 @@ class _NoteRedactionFormBody extends StatefulWidget {
 }
 
 class _NoteRedactionFormBodyState extends State<_NoteRedactionFormBody> {
-  // String passangerPrice = '';
-
-  TextEditingController controllerPrice = TextEditingController();
-
-  @override
-  void initState() {
-    controllerPrice = TextEditingController();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     final infoMyNote = ModalRoute.of(context)?.settings.arguments as List;
@@ -52,12 +55,10 @@ class _NoteRedactionFormBodyState extends State<_NoteRedactionFormBody> {
     final childrenCount = infoMyNote.elementAt(5);
     final whatAnimal = infoMyNote.elementAt(6);
     final remark = infoMyNote.elementAt(7);
-    var passangerPrice = infoMyNote.elementAt(8);
+    final passangerPrice = infoMyNote.elementAt(8);
 
     bool isChildren = false;
     bool isAnimals = false;
-
-    controllerPrice.text = passangerPrice;
 
     return Scaffold(
       backgroundColor: Colors.yellow.shade300,
@@ -66,41 +67,15 @@ class _NoteRedactionFormBodyState extends State<_NoteRedactionFormBody> {
         title: const Text('Редактирование заявки'),
       ),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+        padding: const EdgeInsets.fromLTRB(10, 15, 10, 0),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(
-                height: 40,
-                child: TextFormField(
-                  initialValue: adressFrom,
-                  decoration: const InputDecoration(
-                    hintStyle: TextStyle(fontSize: 13),
-                    hintText: 'Откуда поедем?',
-                    border: OutlineInputBorder(),
-                    isDense: true,
-                  ),
-                  onChanged: (value) => NoteFormModelProvider.of(context)
-                      ?.model
-                      .adressFrom = value,
-                ),
+              AdressFromRedactionForm(
+                adressFromRedaction: adressFrom,
               ),
               const SizedBox(height: 7),
-              SizedBox(
-                height: 40,
-                child: TextFormField(
-                  initialValue: adressToGo,
-                  decoration: const InputDecoration(
-                    hintStyle: TextStyle(fontSize: 13),
-                    hintText: 'Куда поедем?',
-                    border: OutlineInputBorder(),
-                    isDense: true,
-                  ),
-                  onChanged: (value) => NoteFormModelProvider.of(context)
-                      ?.model
-                      .adressToGo = value,
-                ),
-              ),
+              AdressToGoRedactionForm(adressToGo: adressToGo),
               const SizedBox(height: 7),
               Row(
                 children: [
@@ -127,25 +102,7 @@ class _NoteRedactionFormBodyState extends State<_NoteRedactionFormBody> {
                   ),
                   SizedBox(
                     width: 100,
-                    child: SizedBox(
-                      height: 40,
-                      child: TextFormField(
-                        initialValue: childrenCount,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          hintStyle: TextStyle(fontSize: 13),
-                          isDense: true,
-                          hintText: 'Сколько?',
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                        ),
-                        onChanged: (value) => NoteFormModelProvider.of(context)
-                            ?.model
-                            .childrenCount = value,
-                      ),
-                    ),
+                    child: ChildrenCountRedaction(childrenCount: childrenCount),
                   ),
                 ],
               ),
@@ -172,77 +129,16 @@ class _NoteRedactionFormBodyState extends State<_NoteRedactionFormBody> {
                   const SizedBox(
                     width: 20,
                   ),
-                  Expanded(
-                    child: SizedBox(
-                      height: 40,
-                      child: TextFormField(
-                        initialValue: whatAnimal,
-                        keyboardType: TextInputType.streetAddress,
-                        decoration: const InputDecoration(
-                          hintStyle: TextStyle(fontSize: 13),
-                          isDense: true,
-                          hintText: 'Что за животное?',
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                        ),
-                        onChanged: (value) => NoteFormModelProvider.of(context)
-                            ?.model
-                            .whatAnimal = value,
-                      ),
-                    ),
-                  ),
+                  WhatAnimalRedactionForm(whatAnimal: whatAnimal),
                 ],
               ),
               const SizedBox(height: 7),
-              SizedBox(
-                height: 40,
-                child: TextFormField(
-                  initialValue: remark,
-                  decoration: const InputDecoration(
-                    hintStyle: TextStyle(fontSize: 13),
-                    isDense: true,
-                    hintText:
-                        'Примечания (заезды, нужно купить и привезти и т.п.)',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) =>
-                      NoteFormModelProvider.of(context)?.model.remark = value,
-                ),
-              ),
+              RemarkRedactionForm(remark: remark),
               const SizedBox(height: 7),
-              SizedBox(
-                height: 40,
-                child: TextFormField(
-                  controller: controllerPrice,
-
-                  onSaved: (value) => setState(() {
-                    controllerPrice.text = passangerPrice;
-                    NoteFormModelProvider.of(context)?.model.passangerPrice =
-                        value!;
-                  }),
-                  onChanged: (String value) => setState(() {
-                    controllerPrice.text = passangerPrice;
-                    NoteFormModelProvider.of(context)?.model.passangerPrice =
-                        value;
-                  }),
-                  // initialValue: passangerPrice,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintStyle: const TextStyle(fontSize: 13),
-                    hintText: '$passangerPrice',
-                    border: const OutlineInputBorder(),
-                    // isDense: true,
-                  ),
-                  // onChanged: (value) => NoteFormModelProvider.of(context)
-                  //     ?.model
-                  //     .passangerPrice = value,
-                ),
+              PassangerPriceRedactionForm(
+                passangerPriceRedaction: passangerPrice,
               ),
-              // const SizedBox(height: 10),
               const MakeNoteButton(),
-              // const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(
@@ -265,14 +161,379 @@ class _NoteRedactionFormBodyState extends State<_NoteRedactionFormBody> {
   }
 }
 
+class AdressFromRedactionForm extends StatefulWidget {
+  const AdressFromRedactionForm({
+    Key? key,
+    required this.adressFromRedaction,
+  }) : super(key: key);
+
+  final adressFromRedaction;
+
+  @override
+  State<AdressFromRedactionForm> createState() =>
+      _AdressFromRedactionFormState();
+}
+
+class _AdressFromRedactionFormState extends State<AdressFromRedactionForm> {
+  TextEditingController _adressFromController = TextEditingController();
+
+  String get adressFromRedaction => widget.adressFromRedaction;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _adressFromController = TextEditingController()
+      ..addListener(() {})
+      ..text = adressFromRedaction;
+  }
+
+  @override
+  void didChangeDependencies() {
+    NoteFormModelProvider.of(context)?.model.adressFrom = adressFromRedaction;
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _adressFromController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 40,
+      child: TextFormField(
+        controller: _adressFromController,
+        decoration: const InputDecoration(
+          hintStyle: TextStyle(fontSize: 13),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          ),
+          isDense: true,
+        ),
+        onChanged: (value) =>
+            NoteFormModelProvider.of(context)?.model.adressFrom = value,
+      ),
+    );
+  }
+}
+
+class AdressToGoRedactionForm extends StatefulWidget {
+  const AdressToGoRedactionForm({
+    Key? key,
+    required this.adressToGo,
+  }) : super(key: key);
+
+  final adressToGo;
+
+  @override
+  State<AdressToGoRedactionForm> createState() =>
+      _AdressToGoRedactionFormState();
+}
+
+class _AdressToGoRedactionFormState extends State<AdressToGoRedactionForm> {
+  TextEditingController _adressToGoController = TextEditingController();
+  String get adreassToGoRedaction => widget.adressToGo;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _adressToGoController = TextEditingController()
+      ..addListener(() {})
+      ..text = adreassToGoRedaction;
+  }
+
+  @override
+  void didChangeDependencies() {
+    NoteFormModelProvider.of(context)?.model.adressToGo = adreassToGoRedaction;
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _adressToGoController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 40,
+      child: TextFormField(
+        controller: _adressToGoController,
+        decoration: const InputDecoration(
+          hintStyle: TextStyle(fontSize: 13),
+          hintText: 'Куда поедем?',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          ),
+          isDense: true,
+        ),
+        onChanged: (value) =>
+            NoteFormModelProvider.of(context)?.model.adressToGo = value,
+      ),
+    );
+  }
+}
+
+class ChildrenCountRedaction extends StatefulWidget {
+  const ChildrenCountRedaction({
+    Key? key,
+    required this.childrenCount,
+  }) : super(key: key);
+
+  final childrenCount;
+
+  @override
+  State<ChildrenCountRedaction> createState() => _ChildrenCountRedactionState();
+}
+
+class _ChildrenCountRedactionState extends State<ChildrenCountRedaction> {
+  TextEditingController _childrenCountController = TextEditingController();
+
+  String get childrenCountRedaction => widget.childrenCount;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _childrenCountController = TextEditingController()
+      ..addListener(() {})
+      ..text = childrenCountRedaction;
+  }
+
+  @override
+  void didChangeDependencies() {
+    NoteFormModelProvider.of(context)?.model.childrenCount =
+        childrenCountRedaction;
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _childrenCountController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 40,
+      child: TextFormField(
+        controller: _childrenCountController,
+        keyboardType: TextInputType.number,
+        decoration: const InputDecoration(
+          hintStyle: TextStyle(fontSize: 13),
+          isDense: true,
+          hintText: 'Сколько?',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          ),
+        ),
+        onChanged: (value) =>
+            NoteFormModelProvider.of(context)?.model.childrenCount = value,
+      ),
+    );
+  }
+}
+
+class WhatAnimalRedactionForm extends StatefulWidget {
+  const WhatAnimalRedactionForm({
+    Key? key,
+    required this.whatAnimal,
+  }) : super(key: key);
+
+  final whatAnimal;
+
+  @override
+  State<WhatAnimalRedactionForm> createState() =>
+      _WhatAnimalRedactionFormState();
+}
+
+class _WhatAnimalRedactionFormState extends State<WhatAnimalRedactionForm> {
+  TextEditingController _whatAnimalController = TextEditingController();
+
+  String get whatAnimalRedaction => widget.whatAnimal;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _whatAnimalController = TextEditingController()
+      ..addListener(() {})
+      ..text = whatAnimalRedaction;
+  }
+
+  @override
+  void didChangeDependencies() {
+    NoteFormModelProvider.of(context)?.model.whatAnimal = whatAnimalRedaction;
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _whatAnimalController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: SizedBox(
+        height: 40,
+        child: TextFormField(
+          controller: _whatAnimalController,
+          keyboardType: TextInputType.streetAddress,
+          decoration: const InputDecoration(
+            hintStyle: TextStyle(fontSize: 13),
+            isDense: true,
+            hintText: 'Что за животное?',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+          ),
+          onChanged: (value) =>
+              NoteFormModelProvider.of(context)?.model.whatAnimal = value,
+        ),
+      ),
+    );
+  }
+}
+
+class RemarkRedactionForm extends StatefulWidget {
+  const RemarkRedactionForm({
+    Key? key,
+    required this.remark,
+  }) : super(key: key);
+
+  final remark;
+
+  @override
+  State<RemarkRedactionForm> createState() => _RemarkRedactionFormState();
+}
+
+class _RemarkRedactionFormState extends State<RemarkRedactionForm> {
+  TextEditingController _remarkController = TextEditingController();
+
+  String get remarkRedaction => widget.remark;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _remarkController = TextEditingController()
+      ..addListener(() {})
+      ..text = remarkRedaction;
+  }
+
+  @override
+  void didChangeDependencies() {
+    NoteFormModelProvider.of(context)?.model.remark = remarkRedaction;
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _remarkController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 40,
+      child: TextFormField(
+        controller: _remarkController,
+        decoration: const InputDecoration(
+          hintStyle: TextStyle(fontSize: 13),
+          isDense: true,
+          hintText: 'Примечания (заезды, нужно купить и привезти и т.п.)',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          ),
+        ),
+        onChanged: (value) =>
+            NoteFormModelProvider.of(context)?.model.remark = value,
+      ),
+    );
+  }
+}
+
+class PassangerPriceRedactionForm extends StatefulWidget {
+  const PassangerPriceRedactionForm({
+    Key? key,
+    required this.passangerPriceRedaction,
+  }) : super(key: key);
+
+  final passangerPriceRedaction;
+
+  @override
+  State<PassangerPriceRedactionForm> createState() =>
+      _PassangerPriceRedactionFormState();
+}
+
+class _PassangerPriceRedactionFormState
+    extends State<PassangerPriceRedactionForm> {
+  TextEditingController _passangerPriceController = TextEditingController();
+
+  String get _passangerPriceRedaction => widget.passangerPriceRedaction;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _passangerPriceController = TextEditingController()
+      ..addListener(() {})
+      ..text = _passangerPriceRedaction;
+  }
+
+  @override
+  void didChangeDependencies() {
+    NoteFormModelProvider.of(context)?.model.passangerPrice =
+        _passangerPriceRedaction;
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _passangerPriceController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 40,
+      child: TextFormField(
+        controller: _passangerPriceController,
+        keyboardType: TextInputType.number,
+        decoration: const InputDecoration(
+          hintStyle: TextStyle(fontSize: 13),
+          isDense: true,
+          hintText: 'Ваша цена?',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          ),
+        ),
+        onChanged: (value) =>
+            NoteFormModelProvider.of(context)?.model.passangerPrice = value,
+      ),
+    );
+  }
+}
+
 class MakeNoteButton extends StatelessWidget {
   const MakeNoteButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () =>
-          NoteFormModelProvider.of(context)?.model.saveNote(context),
+      onPressed: () {
+        NoteFormModelProvider.of(context)?.model.saveNote(context);
+      },
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(Colors.black),
         foregroundColor: MaterialStateProperty.all(Colors.yellow),

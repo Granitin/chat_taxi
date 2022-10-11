@@ -2,6 +2,7 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:chat_taxi/main_screen.dart';
 import 'package:chat_taxi/providers/make_note_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class NoteFormWidget extends StatefulWidget {
   const NoteFormWidget({Key? key}) : super(key: key);
@@ -34,7 +35,7 @@ class _NoteFormBody extends StatelessWidget {
         backgroundColor: Colors.black,
       ),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+        padding: const EdgeInsets.fromLTRB(10, 15, 10, 0),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -81,7 +82,8 @@ class _AdressFromForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 40,
-      child: TextField(
+      child: TextFormField(
+        autofocus: true,
         textCapitalization: TextCapitalization.sentences,
         decoration: const InputDecoration(
           hintStyle: TextStyle(fontSize: 13),
@@ -89,8 +91,9 @@ class _AdressFromForm extends StatelessWidget {
           border: OutlineInputBorder(),
           isDense: true,
         ),
-        onChanged: (value) =>
-            NoteFormModelProvider.of(context)?.model.adressFrom = value,
+        onChanged: (value) {
+          NoteFormModelProvider.of(context)?.model.adressFrom = value;
+        },
       ),
     );
   }
@@ -273,10 +276,11 @@ class _PassangerPrice extends StatelessWidget {
     return SizedBox(
       height: 40,
       child: TextField(
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         keyboardType: TextInputType.number,
         decoration: const InputDecoration(
           hintStyle: TextStyle(fontSize: 13),
-          hintText: 'Предложите свою цену',
+          hintText: 'Предложите свою цену (руб.)',
           border: OutlineInputBorder(),
           isDense: true,
         ),
