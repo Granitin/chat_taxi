@@ -16,18 +16,6 @@ class _NoteRedactionFormWidgetState extends State<NoteRedactionFormWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final infoMyNote = ModalRoute.of(context)?.settings.arguments as List;
-
-    final uidNote = infoMyNote.elementAt(0);
-    final uidPassanger = infoMyNote.elementAt(1);
-    final uidDriverToChat = infoMyNote.elementAt(2);
-    final adressFrom = infoMyNote.elementAt(3);
-    final adressToGo = infoMyNote.elementAt(4);
-    final childrenCount = infoMyNote.elementAt(5);
-    final whatAnimal = infoMyNote.elementAt(6);
-    final remark = infoMyNote.elementAt(7);
-    final passangerPrice = infoMyNote.elementAt(8);
-
     return NoteFormModelProvider(
       model: _model,
       child: const _NoteRedactionFormBody(),
