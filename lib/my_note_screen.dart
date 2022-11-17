@@ -2,6 +2,7 @@
 import 'package:chat_taxi/main_screen.dart';
 import 'package:chat_taxi/make_new_note_screen.dart';
 import 'package:chat_taxi/my_note_redaction_screen.dart';
+import 'package:chat_taxi/providers/make_note_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,10 @@ class MyNoteWidget extends StatelessWidget {
         backgroundColor: Colors.black,
         title: Row(
           children: const [
-            Text("Моя заявка"),
+            Text(
+              "Чат по моей заявке:",
+              style: TextStyle(fontSize: 20),
+            ),
           ],
         ),
       ),
@@ -96,7 +100,7 @@ class MyNoteWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Звери - $whatAnimal',
+                      'Животные - $whatAnimal',
                       style: const TextStyle(
                         fontSize: 12,
                       ),
@@ -335,111 +339,54 @@ class MyNoteWidget extends StatelessWidget {
               ],
             ),
 
-            //----------------------------------------          chat         -----------------------
-            StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('notes')
-                  .doc(uidNote)
-                  .collection('chat_messages')
-                  .orderBy('timeOfMessage')
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                return Padding(
-                  padding: const EdgeInsets.all(6.0),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 180,
-                        child: Expanded(
-                          child: ListView(
-                            children: snapshot.data!.docs.map(
-                              (DocumentSnapshot document) {
-                                Map<String, dynamic> data =
-                                    document.data()! as Map<String, dynamic>;
-
-                                var chatMessage = data.entries
-                                    .firstWhere(
-                                        (entry) => entry.key == 'new message')
-                                    .value;
-                                var whatCarDriver = data.entries
-                                    .firstWhere(
-                                        (entry) => entry.key == 'whatCarDriver')
-                                    .value;
-
-                                var colorCarDriver = data.entries
-                                    .firstWhere((entry) =>
-                                        entry.key == 'colorCarDriver')
-                                    .value;
-
-                                var numberCarDriver = data.entries
-                                    .firstWhere((entry) =>
-                                        entry.key == 'numberCarDriver')
-                                    .value;
-
-                                var index = 0;
-                                return Row(
-                                  children: [
-                                    Text('- $chatMessage  '),
-                                    Container(
-                                      color: const Color.fromARGB(
-                                          255, 108, 163, 207),
-                                      child: (whatCarDriver == null ||
-                                              colorCarDriver == null ||
-                                              numberCarDriver == null)
-                                          ? const SizedBox.shrink()
-                                          : Text(
-                                              ' - $whatCarDriver, $colorCarDriver, $numberCarDriver'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ).toList(),
-                            // !!!!!!!!!!!!
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
+//----------------------------------------          chat         -----------------------
+            ChatWidget(uidNote: uidNote),
 
 //----------------------------------------      end of    chat         -----------------------
-            SizedBox(
-              height: 50,
-              child: Expanded(
-                child: TextFormField(
-                  autofocus: true,
-                  controller: chatMessageController,
-                  decoration: InputDecoration(
-                    labelText: "Пассажир, ваше предложение",
-                    suffixIcon: IconButton(
-                      onPressed: () async {
-                        var newChatMessage = chatMessageController.text;
-                        final timeOfMessage = DateTime.now();
-                        await FirebaseFirestore.instance
-                            .collection('notes')
-                            .doc(uidNote)
-                            .collection('chat_messages')
-                            .add({
-                          'new message': newChatMessage,
-                          'timeOfMessage': timeOfMessage,
-                          'whatCarDriver': null,
-                          'colorCarDriver': null,
-                          'numberCarDriver': null,
-                        });
+            TextFormField(
+              autofocus: true,
+              controller: chatMessageController,
+              decoration: InputDecoration(
+                labelText: "Пассажир, ваше предложение",
+                suffixIcon: IconButton(
+                  onPressed: () async {
+                    var newChatMessage = chatMessageController.text;
+                    final timeOfMessage = DateTime.now();
+                    await FirebaseFirestore.instance
+                        .collection('notes')
+                        .doc(uidNote)
+                        .collection('chat_messages')
+                        .add({
+                      'new message': newChatMessage,
+                      'timeOfMessage': timeOfMessage,
+                      'whatCarDriver': null,
+                      'colorCarDriver': null,
+                      'numberCarDriver': null,
+                    }).whenComplete(() => const MyNoteWidget().build(context));
 
-                        chatMessageController.clear();
-                      },
-                      icon: const Icon(Icons.send),
-                    ),
-                  ),
+                    chatMessageController.clear();
+                    // ignore: use_build_context_synchronously
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MyNoteWidget(),
+                        settings: RouteSettings(
+                          arguments: [
+                            uidNote,
+                            uidPassanger,
+                            uidDriverToChat,
+                            adressFrom,
+                            adressToGo,
+                            childrenCount,
+                            whatAnimal,
+                            remark,
+                            passangerPrice,
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.send),
                 ),
               ),
             ),
@@ -447,6 +394,131 @@ class MyNoteWidget extends StatelessWidget {
 //-------------------   ---------------------
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ChatWidget extends StatefulWidget {
+  const ChatWidget({
+    Key? key,
+    required this.uidNote,
+  }) : super(key: key);
+
+  final uidNote;
+
+  @override
+  State<ChatWidget> createState() => _ChatWidgetState();
+}
+
+class _ChatWidgetState extends State<ChatWidget> {
+  final ScrollController chatScrollController = ScrollController();
+
+  _scrollToBottom() {
+    if (chatScrollController.hasClients) {
+      chatScrollController.initialScrollOffset;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+
+    // if (chatScrollController.hasClients) {
+    //   chatScrollController.animateTo(
+    //       chatScrollController.position.maxScrollExtent,
+    //       duration: const Duration(seconds: 2),
+    //       curve: Curves.linear);
+
+    //   // setState(() {});
+    // }
+
+    return Expanded(
+      flex: 3,
+      child: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('notes')
+            .doc(widget.uidNote)
+            .collection('chat_messages')
+            .orderBy('timeOfMessage')
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: SizedBox(
+              height: 180,
+              child: ListView(
+                shrinkWrap: true,
+                controller: ScrollController(initialScrollOffset: 10000),
+                children: snapshot.data!.docs.map(
+                  (DocumentSnapshot document) {
+                    Map<String, dynamic> data =
+                        document.data()! as Map<String, dynamic>;
+
+                    var chatMessage = data.entries
+                        .firstWhere((entry) => entry.key == 'new message')
+                        .value;
+                    var whatCarDriver = data.entries
+                        .firstWhere((entry) => entry.key == 'whatCarDriver')
+                        .value;
+
+                    var colorCarDriver = data.entries
+                        .firstWhere((entry) => entry.key == 'colorCarDriver')
+                        .value;
+
+                    var numberCarDriver = data.entries
+                        .firstWhere((entry) => entry.key == 'numberCarDriver')
+                        .value;
+
+                    // var index = 0;
+                    return Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                '- $chatMessage  ',
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: (whatCarDriver == null ||
+                                      colorCarDriver == null ||
+                                      numberCarDriver == null)
+                                  ? const SizedBox.shrink()
+                                  : Text(
+                                      '$whatCarDriver, $colorCarDriver, $numberCarDriver',
+                                      style: const TextStyle(
+                                          fontSize: 10,
+                                          backgroundColor: Colors.yellow),
+                                    ),
+                            ),
+                          ],
+                        ),
+                        const Divider(
+                          color: Colors.black,
+                        ),
+                      ],
+                    );
+                  },
+                ).toList(),
+                // !!!!!!!!!!!!
+              ),
+            ),
+          );
+        },
       ),
     );
   }

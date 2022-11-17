@@ -53,9 +53,6 @@ class _MainScreenBody extends StatelessWidget {
           child: Center(
             child: Column(
               children: [
-                // const SizedBox(
-                //   height: 10,
-                // ),
                 const Text(
                   'Для пассажира',
                   style: TextStyle(
@@ -90,12 +87,10 @@ class _MainScreenBody extends StatelessWidget {
                     MyNoteButton(),
                   ],
                 ),
-
                 const Divider(
                   thickness: 2,
                   color: Colors.black,
                 ),
-
                 const Text(
                   'Для водителя',
                   style: TextStyle(
@@ -116,7 +111,6 @@ class _MainScreenBody extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-
                 const SizedBox(
                   height: 10,
                 ),

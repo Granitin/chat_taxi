@@ -67,17 +67,17 @@ class _NoteRedactionFormBodyState extends State<_NoteRedactionFormBody> {
               const SizedBox(height: 7),
               Row(
                 children: [
-                  Transform.scale(
-                    scale: 0.8,
-                    child: Checkbox(
-                      value: isChildren,
-                      onChanged: (bool? value) {
-                        isChildren = (NoteFormModelProvider.of(context)
-                            ?.model
-                            .isChildren = value!)!;
-                      },
-                    ),
-                  ),
+                  // Transform.scale(
+                  //   scale: 0.8,
+                  //   child: Checkbox(
+                  //     value: isChildren,
+                  //     onChanged: (bool? value) {
+                  //       isChildren = (NoteFormModelProvider.of(context)
+                  //           ?.model
+                  //           .isChildren = value!)!;
+                  //     },
+                  //   ),
+                  // ),
                   const SizedBox(
                     height: 15,
                     child: Text(
@@ -97,16 +97,16 @@ class _NoteRedactionFormBodyState extends State<_NoteRedactionFormBody> {
               const SizedBox(height: 7),
               Row(
                 children: [
-                  Transform.scale(
-                    scale: 0.8,
-                    child: Checkbox(
-                        value: isAnimals,
-                        onChanged: (bool? value) {
-                          isAnimals = (NoteFormModelProvider.of(context)
-                              ?.model
-                              .isAnimals = value!)!;
-                        }),
-                  ),
+                  // Transform.scale(
+                  //   scale: 0.8,
+                  //   child: Checkbox(
+                  //       value: isAnimals,
+                  //       onChanged: (bool? value) {
+                  //         isAnimals = (NoteFormModelProvider.of(context)
+                  //             ?.model
+                  //             .isAnimals = value!)!;
+                  //       }),
+                  // ),
                   const SizedBox(
                     height: 15,
                     child: Text(
@@ -131,7 +131,9 @@ class _NoteRedactionFormBodyState extends State<_NoteRedactionFormBody> {
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => const MainScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const MainScreen(),
+                    ),
                     (Route<dynamic> route) => false,
                   );
                 },

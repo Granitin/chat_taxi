@@ -45,7 +45,7 @@ class NoteToChat extends StatelessWidget {
         backgroundColor: Colors.black,
         title: Row(
           children: [
-            const Text("Чат по заявке:  "),
+            const Text("Чат по заявке:"),
             const SizedBox(
               width: 10,
             ),
@@ -56,7 +56,7 @@ class NoteToChat extends StatelessWidget {
             const SizedBox(
               width: 5,
             ),
-            const Text("руб."),
+            const Text('руб.'),
           ],
         ),
       ),
@@ -72,7 +72,6 @@ class NoteToChat extends StatelessWidget {
                   width: double.infinity,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       // Text('uidNote - $uidNote'),
                       // Text('uidPassanger - $uidPassanger'),
@@ -120,6 +119,7 @@ class NoteToChat extends StatelessWidget {
                       SizedBox(
                         height: 190,
                         child: ListView(
+                          controller: _scrollController,
                           children: snapshot.data!.docs.map(
                             (DocumentSnapshot document) {
                               Map<String, dynamic> data =
@@ -150,12 +150,13 @@ class NoteToChat extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       '- $chatMessage',
-                                      style: TextStyle(color: Colors.blue),
+                                      style:
+                                          const TextStyle(color: Colors.blue),
                                     ),
                                   ),
                                   Container(
                                     color: const Color.fromARGB(
-                                        255, 108, 163, 207),
+                                        255, 153, 194, 228),
                                     child: (whatCarDriver == null ||
                                             colorCarDriver == null ||
                                             numberCarDriver == null)

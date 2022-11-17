@@ -135,22 +135,22 @@ class _ChildrenFormState extends State<_ChildrenForm> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Transform.scale(
-          scale: 0.8,
-          child: Checkbox(
-            value: isChildren,
-            onChanged: (bool? value) {
-              setState(
-                () {
-                  isChildren = value!;
-                },
-              );
-              isChildren = (NoteFormModelProvider.of(context)
-                  ?.model
-                  .isChildren = value!)!;
-            },
-          ),
-        ),
+        // Transform.scale(
+        //   scale: 0.8,
+        //   child: Checkbox(
+        //     value: isChildren,
+        //     onChanged: (bool? value) {
+        //       setState(
+        //         () {
+        //           isChildren = value!;
+        //         },
+        //       );
+        //       isChildren = (NoteFormModelProvider.of(context)
+        //           ?.model
+        //           .isChildren = value!)!;
+        //     },
+        //   ),
+        // ),
         const SizedBox(
           height: 15,
           child: Text(
@@ -172,7 +172,7 @@ class _ChildrenFormState extends State<_ChildrenForm> {
                 isDense: true,
                 hintText: 'Сколько?',
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  borderRadius: BorderRadius.all(Radius.circular(4.0)),
                 ),
               ),
               onChanged: (value) => NoteFormModelProvider.of(context)
@@ -200,23 +200,23 @@ class _AnimalFormState extends State<_AnimalForm> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Transform.scale(
-          scale: 0.8,
-          child: Checkbox(
-              value: isAnimals,
-              onChanged: (bool? value) {
-                setState(() {
-                  isAnimals = value!;
-                });
-                isAnimals = (NoteFormModelProvider.of(context)
-                    ?.model
-                    .isAnimals = value!)!;
-              }),
-        ),
+        // Transform.scale(
+        //   scale: 0.8,
+        //   child: Checkbox(
+        //       value: isAnimals,
+        //       onChanged: (bool? value) {
+        //         setState(() {
+        //           isAnimals = value!;
+        //         });
+        //         isAnimals = (NoteFormModelProvider.of(context)
+        //             ?.model
+        //             .isAnimals = value!)!;
+        //       }),
+        // ),
         const SizedBox(
           height: 15,
           child: Text(
-            'Есть животные?',
+            'Животные?',
             style: TextStyle(fontSize: 13),
           ),
         ),
@@ -231,9 +231,9 @@ class _AnimalFormState extends State<_AnimalForm> {
               decoration: const InputDecoration(
                 hintStyle: TextStyle(fontSize: 13),
                 isDense: true,
-                hintText: 'Что за животное?',
+                hintText: '?',
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  borderRadius: BorderRadius.all(Radius.circular(4.0)),
                 ),
               ),
               onChanged: (value) =>
