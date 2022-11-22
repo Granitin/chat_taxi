@@ -30,7 +30,7 @@ class RegThisDriverFormBody extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.yellow.shade300,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.darkColor,
         title: const Text('Регистрация водителя'),
       ),
       body: Padding(
@@ -146,7 +146,7 @@ class RegDriverButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.black),
+        backgroundColor: MaterialStateProperty.all(AppColors.darkColor),
         foregroundColor: MaterialStateProperty.all(Colors.yellow),
       ),
       onPressed: () {
@@ -172,7 +172,7 @@ class MainScreenButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.black),
+        backgroundColor: MaterialStateProperty.all(AppColors.darkColor),
         foregroundColor: MaterialStateProperty.all(Colors.yellow),
       ),
       onPressed: () {

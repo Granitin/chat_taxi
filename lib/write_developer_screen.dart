@@ -23,7 +23,7 @@ class _WriteDeveloperMessageWidgetState
       backgroundColor: Colors.yellow.shade300,
       appBar: AppBar(
           title: const Text('Написать разработчику'),
-          backgroundColor: Colors.black),
+          backgroundColor: AppColors.darkColor),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -31,7 +31,7 @@ class _WriteDeveloperMessageWidgetState
             children: [
               TextFormField(
                 textCapitalization: TextCapitalization.sentences,
-                cursorColor: Colors.black,
+                cursorColor: AppColors.darkColor,
                 controller: TextEditingController(text: ''),
                 autofocus: true,
                 maxLines: 7,
@@ -47,7 +47,7 @@ class _WriteDeveloperMessageWidgetState
               ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.black),
+                      MaterialStateProperty.all<Color>(AppColors.darkColor),
                   foregroundColor:
                       MaterialStateProperty.all<Color>(Colors.yellow),
                 ),

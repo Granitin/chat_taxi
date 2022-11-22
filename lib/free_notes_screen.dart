@@ -37,7 +37,7 @@ class _FreeNotesScreenBodyState extends State<FreeNotesScreenBody> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.darkColor,
         title: const Text(
           'Свободные заявки:',
           style: TextStyle(),

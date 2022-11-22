@@ -32,45 +32,56 @@ class _NoteFormBody extends StatelessWidget {
       backgroundColor: Colors.yellow.shade300,
       appBar: AppBar(
         title: const Text('Создать заявку'),
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.darkColor,
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(10, 15, 10, 0),
         child: SingleChildScrollView(
           child: Column(
-            children: [
-              const _AdressFromForm(),
-              const SizedBox(height: 5),
-              const _AdressToGoForm(),
-              const SizedBox(height: 5),
-              const _ChildrenForm(),
-              const SizedBox(height: 5),
-              const _AnimalForm(),
-              const SizedBox(height: 5),
-              const _Remark(),
-              const SizedBox(height: 5),
-              const _PassangerPrice(),
-              const SizedBox(height: 5),
-              const MakeNoteButton(),
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.black),
-                  foregroundColor: MaterialStateProperty.all(Colors.yellow),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const MainScreen(),
-                    ),
-                  );
-                },
-                child: const Text('Главный экран'),
-              ),
+            children: const [
+              _AdressFromForm(),
+              SizedBox(height: 5),
+              _AdressToGoForm(),
+              SizedBox(height: 5),
+              _ChildrenForm(),
+              SizedBox(height: 5),
+              _AnimalForm(),
+              SizedBox(height: 5),
+              _Remark(),
+              SizedBox(height: 5),
+              _PassangerPrice(),
+              SizedBox(height: 5),
+              MakeNoteButton(),
+              _GoMainScreenButton(),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _GoMainScreenButton extends StatelessWidget {
+  const _GoMainScreenButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(AppColors.darkColor),
+        foregroundColor: MaterialStateProperty.all(Colors.yellow),
+      ),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MainScreen(),
+          ),
+        );
+      },
+      child: const Text('Главный экран'),
     );
   }
 }
@@ -298,7 +309,7 @@ class MakeNoteButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.black),
+        backgroundColor: MaterialStateProperty.all(AppColors.darkColor),
         foregroundColor: MaterialStateProperty.all(Colors.yellow),
       ),
       onPressed: () {

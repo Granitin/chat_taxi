@@ -2,7 +2,6 @@
 import 'package:chat_taxi/main_screen.dart';
 import 'package:chat_taxi/make_new_note_screen.dart';
 import 'package:chat_taxi/my_note_redaction_screen.dart';
-import 'package:chat_taxi/providers/make_note_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +39,7 @@ class MyNoteWidget extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.darkColor,
         title: Row(
           children: const [
             Text(
@@ -62,25 +61,6 @@ class MyNoteWidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Text(
-                    //   'uidNote - $uidNote',
-                    //   style: const TextStyle(
-                    //     fontSize: 12,
-                    //     color: Colors.blue,
-                    //   ),
-                    // ),
-                    // Text(
-                    //   'uidPassanger - $uidPassanger',
-                    //   style: const TextStyle(
-                    //     fontSize: 12,
-                    //   ),
-                    // ),
-                    // Text(
-                    //   'uidDriver - $uidDriverToChat',
-                    //   style: const TextStyle(
-                    //     fontSize: 12,
-                    //   ),
-                    // ),
                     Text(
                       'Адрес подачи - $adressFrom',
                       style: const TextStyle(
@@ -136,7 +116,7 @@ class MyNoteWidget extends StatelessWidget {
                   child: OutlinedButton(
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.black),
+                          MaterialStateProperty.all<Color>(AppColors.darkColor),
                       foregroundColor:
                           MaterialStateProperty.all<Color>(Colors.green),
                     ),
@@ -242,7 +222,7 @@ class MyNoteWidget extends StatelessWidget {
                             ),
                           );
                         },
-                        onError: (e) => print("Error getting document: $e"),
+                        // onError: (e) => print("Error getting document: $e"),
                       );
                     },
                     child: Row(
@@ -262,9 +242,24 @@ class MyNoteWidget extends StatelessWidget {
                   child: OutlinedButton(
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.black),
+                          MaterialStateProperty.all<Color>(AppColors.darkColor),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+                      final timeOfMessage = DateTime.now();
+                      await FirebaseFirestore.instance
+                          .collection('notes')
+                          .doc(uidNote)
+                          .collection('chat_messages')
+                          .add(
+                        {
+                          'new message': 'ЗАЯВКА УДАЛЕНА',
+                          'timeOfMessage': timeOfMessage,
+                          'whatCarDriver': null,
+                          'colorCarDriver': null,
+                          'numberCarDriver': null,
+                        },
+                      );
+
                       deleteMyNote();
 
                       showDialog(
@@ -319,7 +314,7 @@ class MyNoteWidget extends StatelessWidget {
                   child: OutlinedButton(
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.black),
+                          MaterialStateProperty.all<Color>(AppColors.darkColor),
                     ),
                     onPressed: () {
                       Navigator.pushAndRemoveUntil(
@@ -344,6 +339,7 @@ class MyNoteWidget extends StatelessWidget {
 
 //----------------------------------------      end of    chat         -----------------------
             TextFormField(
+              maxLines: null,
               autofocus: true,
               controller: chatMessageController,
               decoration: InputDecoration(
@@ -356,35 +352,17 @@ class MyNoteWidget extends StatelessWidget {
                         .collection('notes')
                         .doc(uidNote)
                         .collection('chat_messages')
-                        .add({
-                      'new message': newChatMessage,
-                      'timeOfMessage': timeOfMessage,
-                      'whatCarDriver': null,
-                      'colorCarDriver': null,
-                      'numberCarDriver': null,
-                    }).whenComplete(() => const MyNoteWidget().build(context));
+                        .add(
+                      {
+                        'new message': newChatMessage,
+                        'timeOfMessage': timeOfMessage,
+                        'whatCarDriver': null,
+                        'colorCarDriver': null,
+                        'numberCarDriver': null,
+                      },
+                    );
 
                     chatMessageController.clear();
-                    // ignore: use_build_context_synchronously
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MyNoteWidget(),
-                        settings: RouteSettings(
-                          arguments: [
-                            uidNote,
-                            uidPassanger,
-                            uidDriverToChat,
-                            adressFrom,
-                            adressToGo,
-                            childrenCount,
-                            whatAnimal,
-                            remark,
-                            passangerPrice,
-                          ],
-                        ),
-                      ),
-                    );
                   },
                   icon: const Icon(Icons.send),
                 ),
@@ -423,21 +401,11 @@ class _ChatWidgetState extends State<ChatWidget> {
   @override
   void initState() {
     super.initState();
+    _scrollToBottom();
   }
 
   @override
   Widget build(BuildContext context) {
-    // WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
-
-    // if (chatScrollController.hasClients) {
-    //   chatScrollController.animateTo(
-    //       chatScrollController.position.maxScrollExtent,
-    //       duration: const Duration(seconds: 2),
-    //       curve: Curves.linear);
-
-    //   // setState(() {});
-    // }
-
     return Expanded(
       flex: 3,
       child: StreamBuilder<QuerySnapshot>(
@@ -445,7 +413,7 @@ class _ChatWidgetState extends State<ChatWidget> {
             .collection('notes')
             .doc(widget.uidNote)
             .collection('chat_messages')
-            .orderBy('timeOfMessage')
+            .orderBy('timeOfMessage', descending: true)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
@@ -458,8 +426,9 @@ class _ChatWidgetState extends State<ChatWidget> {
             child: SizedBox(
               height: 180,
               child: ListView(
+                reverse: true,
                 shrinkWrap: true,
-                controller: ScrollController(initialScrollOffset: 10000),
+                controller: ScrollController(initialScrollOffset: 0),
                 children: snapshot.data!.docs.map(
                   (DocumentSnapshot document) {
                     Map<String, dynamic> data =
@@ -524,6 +493,32 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 }
 
+// Future<void> deleteMyNote() async {
+//   final idNoteToDelete = FirebaseAuth.instance.currentUser?.uid;
+
+//   await FirebaseFirestore.instance
+//       .collection("notes")
+//       .doc(idNoteToDelete)
+//       .collection("chat_messages")
+//       .get()
+//       .then((value) {
+//     for (var data in value.docs) {
+//       FirebaseFirestore.instance
+//           .collection("notes")
+//           .doc(idNoteToDelete)
+//           .collection("chat_messages")
+//           .doc(data.id)
+//           .delete()
+//           .then((value) {
+//         FirebaseFirestore.instance
+//             .collection("notes")
+//             .doc(idNoteToDelete)
+//             .delete();
+//       });
+//     }
+//   });
+// }
+
 Future<void> deleteMyNote() async {
   final idNoteToDelete = FirebaseAuth.instance.currentUser?.uid;
 
@@ -544,7 +539,13 @@ Future<void> deleteMyNote() async {
         FirebaseFirestore.instance
             .collection("notes")
             .doc(idNoteToDelete)
-            .delete();
+            .collection('chat_messages')
+            .doc()
+            .delete()
+            .then((value) => FirebaseFirestore.instance
+                .collection("notes")
+                .doc(idNoteToDelete)
+                .delete());
       });
     }
   });

@@ -51,7 +51,7 @@ class _NoteRedactionFormBodyState extends State<_NoteRedactionFormBody> {
     return Scaffold(
       backgroundColor: Colors.yellow.shade300,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.darkColor,
         title: const Text('Редактирование заявки'),
       ),
       body: Padding(
@@ -127,26 +127,37 @@ class _NoteRedactionFormBodyState extends State<_NoteRedactionFormBody> {
                 passangerPriceRedaction: passangerPrice,
               ),
               const MakeNoteButton(),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const MainScreen(),
-                    ),
-                    (Route<dynamic> route) => false,
-                  );
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.black),
-                  foregroundColor: MaterialStateProperty.all(Colors.yellow),
-                ),
-                child: const Text("Главное меню"),
-              ),
+              const _GoMainScreenButton(),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _GoMainScreenButton extends StatelessWidget {
+  const _GoMainScreenButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MainScreen(),
+          ),
+          (Route<dynamic> route) => false,
+        );
+      },
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(AppColors.darkColor),
+        foregroundColor: MaterialStateProperty.all(Colors.yellow),
+      ),
+      child: const Text("Главное меню"),
     );
   }
 }
@@ -525,7 +536,7 @@ class MakeNoteButton extends StatelessWidget {
         NoteFormModelProvider.of(context)?.model.saveNote(context);
       },
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.black),
+        backgroundColor: MaterialStateProperty.all(AppColors.darkColor),
         foregroundColor: MaterialStateProperty.all(Colors.yellow),
       ),
       child: const Text('Отправить заявку'),

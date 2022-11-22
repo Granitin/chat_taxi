@@ -25,6 +25,11 @@ class MyNoteController extends ChangeNotifier {
   }
 }
 
+class AppColors {
+  static const darkColor = Color.fromARGB(255, 61, 61, 61);
+  static const yellowColor = Color.fromARGB(255, 238, 240, 145);
+}
+
 class MainScreen extends StatelessWidget {
   const MainScreen({Key? key}) : super(key: key);
 
@@ -42,115 +47,204 @@ class _MainScreenBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.darkColor,
         centerTitle: true,
         title: const Text('Chat-Taxi'),
       ),
-      backgroundColor: Colors.yellow.shade300,
+      backgroundColor: AppColors.yellowColor,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Center(
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                const Text(
-                  'Для пассажира',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    color: Colors.lime[300],
+                    child: const PassangerSectionWidget(),
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
+                Expanded(
+                  flex: 6,
+                  child: Container(
+                    color: Colors.amber[200],
+                    child: const DriverSectionWidget(),
+                  ),
                 ),
-                AnimatedTextKit(
-                  repeatForever: true,
-                  animatedTexts: [
-                    TyperAnimatedText(
-                      'создавай заявки без регистрации',
-                      speed: const Duration(milliseconds: 100),
-                      textStyle: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.green,
-                        fontWeight: FontWeight.bold,
-                      ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    color: Colors.amber[200],
+                    // color: Colors.blueGrey[200],
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        RulesButtonWidget(),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        WhriteDevMessageButtonWidget(),
+                      ],
                     ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    MakeNewNoteButton(),
-                    MyNoteButton(),
-                  ],
-                ),
-                const Divider(
-                  thickness: 2,
-                  color: Colors.black,
-                ),
-                const Text(
-                  'Для водителя',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const DriverRegistrationButton(),
-                const FreeNotesButton(),
-                const Text(
-                  'для просмотра необходимо \n зарегистрироваться',
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: Colors.red,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const ThisDriverDataWidget(),
-                const Divider(
-                  thickness: 2,
-                  color: Colors.black,
-                ),
-                OutlinedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Rules(),
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    'Правила Chat-Taxi',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
-                OutlinedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            const WriteDeveloperMessageWidget(),
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    'Написать разработчику',
-                    style: TextStyle(color: Colors.black),
                   ),
                 ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class PassangerSectionWidget extends StatelessWidget {
+  const PassangerSectionWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        const Text(
+          'Для пассажира',
+          style: TextStyle(
+            color: AppColors.darkColor,
+            fontSize: 30,
+          ),
+        ),
+        // const SizedBox(
+        //   height: 10,
+        // ),
+        AnimatedTextKit(
+          repeatForever: true,
+          animatedTexts: [
+            TyperAnimatedText(
+              'создавай заявки без регистрации'.toUpperCase(),
+              speed: const Duration(milliseconds: 100),
+              textStyle: const TextStyle(
+                fontSize: 16,
+                color: Colors.green,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        // const SizedBox(
+        //   height: 10,
+        // ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: const [
+            MakeNewNoteButton(),
+            MyNoteButton(),
+          ],
+        ),
+        // const Divider(
+        //   thickness: 2,
+        //   color: AppColors.darkColor,
+        // ),
+      ],
+    );
+  }
+}
+
+class DriverSectionWidget extends StatelessWidget {
+  const DriverSectionWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: const [
+          Text(
+            'Для водителя',
+            style: TextStyle(
+              color: AppColors.darkColor,
+              fontSize: 30,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          DriverRegistrationButton(),
+          FreeNotesButton(),
+          Text(
+            'для просмотра необходимо \n зарегистрироваться водителем',
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.red,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          ThisDriverDataWidget(),
+          DriverUnregisrationButton(),
+          // Divider(
+          //   thickness: 2,
+          //   color: AppColors.darkColor,
+          // ),
+          // SizedBox(
+          //   height: 40,
+          // ),
+        ],
+      ),
+    );
+  }
+}
+
+class RulesButtonWidget extends StatelessWidget {
+  const RulesButtonWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Rules(),
+          ),
+        );
+      },
+      child: const Text(
+        'Правила Chat-Taxi',
+        style: TextStyle(
+          color: AppColors.darkColor,
+          fontSize: 10,
+        ),
+      ),
+    );
+  }
+}
+
+class WhriteDevMessageButtonWidget extends StatelessWidget {
+  const WhriteDevMessageButtonWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const WriteDeveloperMessageWidget(),
+          ),
+        );
+      },
+      child: const Text(
+        'Написать разработчику',
+        style: TextStyle(
+          color: AppColors.darkColor,
+          fontSize: 10,
         ),
       ),
     );
@@ -175,7 +269,7 @@ class MakeNewNoteButton extends StatelessWidget {
         ),
         ElevatedButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.black),
+            backgroundColor: MaterialStateProperty.all(AppColors.darkColor),
             foregroundColor: MaterialStateProperty.all(Colors.yellow),
           ),
           onPressed: () async {
@@ -214,7 +308,7 @@ class MyNoteButton extends StatelessWidget {
         ),
         ElevatedButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.black),
+            backgroundColor: MaterialStateProperty.all(AppColors.darkColor),
             foregroundColor: MaterialStateProperty.all(Colors.yellow),
           ),
           onPressed: () async {
@@ -339,8 +433,8 @@ class DriverRegistrationButton extends StatelessWidget {
       children: [
         ElevatedButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.black),
-            foregroundColor: MaterialStateProperty.all(Colors.yellow),
+            backgroundColor: MaterialStateProperty.all(AppColors.darkColor),
+            foregroundColor: MaterialStateProperty.all(AppColors.yellowColor),
           ),
           onPressed: () {
             Navigator.push(
@@ -353,13 +447,13 @@ class DriverRegistrationButton extends StatelessWidget {
           child: Row(
             children: const [
               Icon(
-                Icons.drive_eta,
+                Icons.local_taxi,
                 color: Colors.blue,
               ),
               SizedBox(
                 width: 7,
               ),
-              Text('Стать водителем'),
+              Text('Зарегистрироваться водителем'),
             ],
           ),
         ),
@@ -378,8 +472,8 @@ class FreeNotesButton extends StatelessWidget {
       children: [
         OutlinedButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.black),
-            foregroundColor: MaterialStateProperty.all(Colors.yellow),
+            backgroundColor: MaterialStateProperty.all(AppColors.darkColor),
+            foregroundColor: MaterialStateProperty.all(AppColors.yellowColor),
           ),
           onPressed: () {
             final idThisDriver = FirebaseAuth.instance.currentUser?.uid;
@@ -476,21 +570,62 @@ class _ThisDriverDataWidgetState extends State<ThisDriverDataWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Text(
-          'Мои данные:',
-          style: TextStyle(
-              color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        // Text(uidDriver),
-        Text('номер телефона - $phoneNumberDriver'),
-        Text('машина - $whatCarDriver'),
-        Text('цвет машины - $colorCarDriver'),
-        Text('номер машины - $numberCarDriver'),
-        const DriverUnregisrationButton(),
-      ],
+    final leftOffset = MediaQuery.of(context).size.width / 3.3.toDouble();
+    return Padding(
+      padding: EdgeInsets.only(left: leftOffset),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Мои данные:',
+            style: TextStyle(
+                color: AppColors.darkColor,
+                fontSize: 18,
+                fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: [
+              const Icon(Icons.phone),
+              const SizedBox(
+                width: 5,
+              ),
+              Text(phoneNumberDriver),
+            ],
+          ),
+          Row(
+            children: [
+              const Icon(
+                Icons.local_taxi,
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              Text(whatCarDriver),
+            ],
+          ),
+          Row(
+            children: [
+              const Icon(Icons.color_lens),
+              const SizedBox(
+                width: 5,
+              ),
+              Text(colorCarDriver),
+            ],
+          ),
+          Row(
+            children: [
+              const Icon(Icons.numbers),
+              const SizedBox(
+                width: 5,
+              ),
+              Text(numberCarDriver),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
