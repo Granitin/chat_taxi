@@ -230,17 +230,8 @@ class _ChatDriverWidgetState extends State<_ChatDriverWidget> {
                           ],
                         );
                       } else {
-                        return Column(
-                          children: [
-                            _ChatRowDriver(
-                                chatMessage: 'нет больше этой заявки',
-                                whatCarDriver: null,
-                                colorCarDriver: null,
-                                numberCarDriver: null),
-                            const Divider(
-                              color: Colors.black,
-                            ),
-                          ],
+                        return const AlertDialog(
+                          title: Text('заявка удалена'),
                         );
 
                         // return Navigator(
