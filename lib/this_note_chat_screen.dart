@@ -231,6 +231,7 @@ class _ChatDriverWidgetState extends State<_ChatDriverWidget> {
                         );
                       } else {
                         return const AlertDialog(
+                          backgroundColor: Colors.yellow,
                           title: Text('заявка удалена'),
                         );
 

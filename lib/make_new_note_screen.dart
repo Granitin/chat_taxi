@@ -74,11 +74,12 @@ class _GoMainScreenButton extends StatelessWidget {
         foregroundColor: MaterialStateProperty.all(Colors.yellow),
       ),
       onPressed: () {
-        Navigator.push(
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
             builder: (context) => const MainScreen(),
           ),
+          (Route<dynamic> route) => false,
         );
       },
       child: const Text('Главный экран'),

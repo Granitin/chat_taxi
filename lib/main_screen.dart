@@ -49,7 +49,7 @@ class _MainScreenBody extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.darkColor,
         centerTitle: true,
-        title: const Text('Chat-Taxi'),
+        title: const Text('Чат-такси'),
       ),
       backgroundColor: AppColors.yellowColor,
       body: SafeArea(
@@ -174,7 +174,7 @@ class DriverSectionWidget extends StatelessWidget {
           Text(
             'для просмотра необходимо \n зарегистрироваться водителем',
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 12,
               color: Colors.red,
             ),
             textAlign: TextAlign.center,
@@ -184,13 +184,6 @@ class DriverSectionWidget extends StatelessWidget {
           ),
           ThisDriverDataWidget(),
           DriverUnregisrationButton(),
-          // Divider(
-          //   thickness: 2,
-          //   color: AppColors.darkColor,
-          // ),
-          // SizedBox(
-          //   height: 40,
-          // ),
         ],
       ),
     );
@@ -329,17 +322,31 @@ class MyNoteButton extends StatelessWidget {
                             'У вас нет заявки',
                             textAlign: TextAlign.center,
                           ),
-                          content: TextButton(
-                            onPressed: () {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const NoteFormWidget(),
+                          content: SizedBox(
+                            height: 100,
+                            child: Column(
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const NoteFormWidget(),
+                                      ),
+                                      (Route<dynamic> route) => false,
+                                    );
+                                  },
+                                  child: const Text('Создать заявку'),
                                 ),
-                                (Route<dynamic> route) => false,
-                              );
-                            },
-                            child: const Text('Создать заявку'),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Не хочу создавать заявку'),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       });
