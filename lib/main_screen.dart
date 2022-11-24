@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'package:chat_taxi/choose_city_screen.dart';
 import 'package:chat_taxi/free_notes_screen.dart';
 import 'package:chat_taxi/make_new_note_screen.dart';
 import 'package:chat_taxi/my_note_screen.dart';
@@ -45,11 +46,15 @@ class _MainScreenBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    myCity = GlobalKey();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.darkColor,
         centerTitle: true,
-        title: const Text('Чат-такси'),
+        title: const Text(
+          'ЧАТ - ТАКСИ',
+          style: TextStyle(color: Colors.yellow, fontWeight: FontWeight.bold),
+        ),
       ),
       backgroundColor: AppColors.yellowColor,
       body: SafeArea(
@@ -77,7 +82,6 @@ class _MainScreenBody extends StatelessWidget {
                   flex: 1,
                   child: Container(
                     color: Colors.amber[200],
-                    // color: Colors.blueGrey[200],
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
@@ -108,7 +112,7 @@ class PassangerSectionWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         const Text(
-          'Для пассажира',
+          'Раздел пассажира:',
           style: TextStyle(
             color: AppColors.darkColor,
             fontSize: 30,
@@ -160,7 +164,7 @@ class DriverSectionWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: const [
           Text(
-            'Для водителя',
+            'Раздел водителя:',
             style: TextStyle(
               color: AppColors.darkColor,
               fontSize: 30,

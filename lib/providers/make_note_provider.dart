@@ -74,7 +74,6 @@ class NoteFormModel {
             .firstWhere((entry) => entry.key == 'passangerPrice')
             .value;
 
-        print(data);
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -117,7 +116,7 @@ class NoteFormModel {
       "passangerPrice": passangerPrice,
     });
 
-    Navigator.pushReplacement(
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
         builder: (context) => const MyNoteWidget(),
@@ -135,6 +134,7 @@ class NoteFormModel {
           ],
         ),
       ),
+      (Route<dynamic> route) => false,
     );
   }
 }

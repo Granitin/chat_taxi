@@ -153,34 +153,28 @@ class _ChatDriverWidget extends StatefulWidget {
 class _ChatDriverWidgetState extends State<_ChatDriverWidget> {
   @override
   Widget build(BuildContext context) {
-    final chatMessagesStream = FirebaseFirestore.instance
+    var chatStream = FirebaseFirestore.instance
         .collection('notes')
         .doc(widget.uidNote)
         .collection('chat_messages')
+        .orderBy('timeOfMessage', descending: true)
         .snapshots();
 
-    final chatMessages = chatMessagesStream.contains('ЗАЯВКА УДАЛЕНА');
-    print(chatMessagesStream.toString());
-    print(chatMessages);
+    StreamSubscription<dynamic>? chatStreamSubscription;
+    final ScrollController chatScrollController = ScrollController();
 
-    final StreamController streamChatController = StreamController();
+    chatStreamSubscription = chatStream.listen(
+      ((event) {}),
+    );
 
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('notes')
-          .doc(widget.uidNote)
-          .collection('chat_messages')
-          .orderBy('timeOfMessage', descending: true)
-          .snapshots(),
+    return StreamBuilder(
+      stream: chatStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         }
-
-        final ScrollController chatScrollController = ScrollController();
-
         return Padding(
           padding: const EdgeInsets.all(6.0),
           child: Column(
@@ -230,19 +224,17 @@ class _ChatDriverWidgetState extends State<_ChatDriverWidget> {
                           ],
                         );
                       } else {
-                        return const AlertDialog(
-                          backgroundColor: Colors.yellow,
-                          title: Text('заявка удалена'),
-                        );
-
-                        // return Navigator(
-                        //   onGenerateRoute: ((settings) {
-                        //     return MaterialPageRoute(
-                        //       builder: (context) => const FreeNotesScreen(),
-                        //     );
-                        //   }),
-                        //   // initialRoute: '/',
-                        // );
+                        chatStreamSubscription?.cancel().whenComplete(
+                              () => Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const NoteDeleteForDriverScreen(),
+                                ),
+                                (Route<dynamic> route) => false,
+                              ),
+                            );
+                        return const SizedBox.shrink();
                       }
                     },
                   ).toList(),
