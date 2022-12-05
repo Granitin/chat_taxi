@@ -39,6 +39,7 @@ dependencies:
   pinput: ^2.2.7
   shared_preferences: ^2.0.15
   assets_audio_player: ^3.0.5
+  lottie: ^2.0.0
   # scroll_loop_auto_scroll: ^0.0.5
   # firebase_messaging_platform_interface: ^4.1.4
   # parallax_rain: ^1.1.0

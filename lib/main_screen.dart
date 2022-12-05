@@ -1,11 +1,11 @@
 // ignore_for_file: avoid_print
 
-import 'package:chat_taxi/choose_city_screen.dart';
 import 'package:chat_taxi/free_notes_screen.dart';
 import 'package:chat_taxi/make_new_note_screen.dart';
 import 'package:chat_taxi/my_note_screen.dart';
 import 'package:chat_taxi/registration_this_driver.dart';
 import 'package:chat_taxi/rules_screen.dart';
+import 'package:chat_taxi/select_city_screen.dart';
 import 'package:chat_taxi/write_developer_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -41,19 +41,53 @@ class MainScreen extends StatelessWidget {
       );
 }
 
-class _MainScreenBody extends StatelessWidget {
+class _MainScreenBody extends StatefulWidget {
   const _MainScreenBody({Key? key}) : super(key: key);
 
   @override
+  State<_MainScreenBody> createState() => _MainScreenBodyState();
+}
+
+class _MainScreenBodyState extends State<_MainScreenBody> {
+  String myCity = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMyCity();
+    setState(() {});
+  }
+
+  Future<void> _loadMyCity() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      myCity = (prefs.getString('myCity') ?? 'нет данных');
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    myCity = GlobalKey();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.darkColor,
         centerTitle: true,
-        title: const Text(
-          'ЧАТ - ТАКСИ',
-          style: TextStyle(color: Colors.yellow, fontWeight: FontWeight.bold),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+              myCity,
+              style: const TextStyle(
+                  color: Colors.yellow, fontWeight: FontWeight.bold),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: ((context) => const SelectCityScreen()),
+                ),
+              ),
+              child: const Text('выбрать город'),
+            ),
+          ],
         ),
       ),
       backgroundColor: AppColors.yellowColor,
@@ -118,9 +152,6 @@ class PassangerSectionWidget extends StatelessWidget {
             fontSize: 30,
           ),
         ),
-        // const SizedBox(
-        //   height: 10,
-        // ),
         AnimatedTextKit(
           repeatForever: true,
           animatedTexts: [
@@ -135,9 +166,6 @@ class PassangerSectionWidget extends StatelessWidget {
             ),
           ],
         ),
-        // const SizedBox(
-        //   height: 10,
-        // ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: const [
@@ -145,10 +173,6 @@ class PassangerSectionWidget extends StatelessWidget {
             MyNoteButton(),
           ],
         ),
-        // const Divider(
-        //   thickness: 2,
-        //   color: AppColors.darkColor,
-        // ),
       ],
     );
   }
@@ -272,7 +296,7 @@ class MakeNewNoteButton extends StatelessWidget {
           onPressed: () async {
             mainScreenModel.authThisPassanger();
 
-            deleteMyNote();
+            // deleteMyNote();
 
             Navigator.push(
               context,
@@ -293,6 +317,10 @@ class MyNoteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final myCity =
+    //     context.findAncestorStateOfType<_MainScreenBodyState>()?.myCity;
+    // print('111 $myCity');
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

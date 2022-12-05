@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FreeNotesController extends ChangeNotifier {
   final Stream<QuerySnapshot> notesSrteam = FirebaseFirestore.instance
@@ -31,6 +32,27 @@ class FreeNotesScreenBody extends StatefulWidget {
 }
 
 class _FreeNotesScreenBodyState extends State<FreeNotesScreenBody> {
+  String myCity = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMyCity();
+    setState(() {});
+  }
+
+  Future<void> _loadMyCity() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      myCity = (prefs.getString('myCity') ?? 'нет данных');
+    });
+  }
+
+  final Stream<QuerySnapshot> notesSrteam = FirebaseFirestore.instance
+      .collection("notes")
+      .orderBy('passangerPrice')
+      .snapshots();
+
   @override
   Widget build(BuildContext context) {
     final freeNotesScreenModel = FreeNotesController();
@@ -38,9 +60,11 @@ class _FreeNotesScreenBodyState extends State<FreeNotesScreenBody> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: AppColors.darkColor,
-        title: const Text(
-          'Свободные заявки:',
-          style: TextStyle(),
+        title: FittedBox(
+          child: Text(
+            'Заявки в г. $myCity:',
+            style: const TextStyle(),
+          ),
         ),
         actions: [
           TextButton(

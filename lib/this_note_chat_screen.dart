@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:chat_taxi/free_notes_screen.dart';
 import 'package:chat_taxi/main_screen.dart';
 import 'package:chat_taxi/note_delete_for_driver_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,12 +18,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 //                                                       ],
 
-Future<void> _loadDriverData() async {
-  final prefs = await SharedPreferences.getInstance();
-  final whatCarDriver = (prefs.getString('whatCarDriver') ?? 'нет данных');
-  final colorCarDriver = (prefs.getString('colorCarDriver') ?? 'нет данных');
-  final numberCarDriver = (prefs.getString('numberCarDriver') ?? 'нет данных');
-}
+// Future<void> _loadDriverData() async {
+//   final prefs = await SharedPreferences.getInstance();
+//   final whatCarDriver = (prefs.getString('whatCarDriver') ?? 'нет данных');
+//   final colorCarDriver = (prefs.getString('colorCarDriver') ?? 'нет данных');
+//   final numberCarDriver = (prefs.getString('numberCarDriver') ?? 'нет данных');
+// }
 
 class NoteToChat extends StatelessWidget {
   const NoteToChat({super.key});
@@ -161,90 +160,97 @@ class _ChatDriverWidgetState extends State<_ChatDriverWidget> {
         .snapshots();
 
     StreamSubscription<dynamic>? chatStreamSubscription;
-    final ScrollController chatScrollController = ScrollController();
+    // final ScrollController chatScrollController = ScrollController();
 
     chatStreamSubscription = chatStream.listen(
       ((event) {}),
     );
 
-    return StreamBuilder(
-      stream: chatStream,
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        return Padding(
-          padding: const EdgeInsets.all(6.0),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 190,
-                child: ListView(
-                  reverse: true,
-                  controller: chatScrollController,
-                  children: snapshot.data!.docs.map(
-                    (DocumentSnapshot document) {
-                      Map<String, dynamic> data =
-                          document.data()! as Map<String, dynamic>;
+    return Expanded(
+      // flex: 3,
+      child: StreamBuilder(
+        stream: chatStream,
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 190,
+                  child: ListView(
+                    reverse: true,
+                    controller: ScrollController(initialScrollOffset: 0),
+                    children: snapshot.data!.docs.map(
+                      (DocumentSnapshot document) {
+                        Map<String, dynamic> data =
+                            document.data()! as Map<String, dynamic>;
 
-                      var chatMessage = data.entries
-                          .firstWhere((entry) => entry.key == 'new message')
-                          .value;
-                      var whatCarDriver = data.entries
-                          .firstWhere((entry) => entry.key == 'whatCarDriver')
-                          .value;
+                        var chatMessage = data.entries
+                            .firstWhere((entry) => entry.key == 'new message')
+                            .value;
+                        var whatCarDriver = data.entries
+                            .firstWhere((entry) => entry.key == 'whatCarDriver')
+                            .value;
 
-                      var colorCarDriver = data.entries
-                          .firstWhere((entry) => entry.key == 'colorCarDriver')
-                          .value;
+                        var colorCarDriver = data.entries
+                            .firstWhere(
+                                (entry) => entry.key == 'colorCarDriver')
+                            .value;
 
-                      var numberCarDriver = data.entries
-                          .firstWhere((entry) => entry.key == 'numberCarDriver')
-                          .value;
+                        var numberCarDriver = data.entries
+                            .firstWhere(
+                                (entry) => entry.key == 'numberCarDriver')
+                            .value;
 
-                      var timeOfMessage = data.entries
-                          .firstWhere((entry) => entry.key == 'timeOfMessage')
-                          .value;
+                        var timeOfMessage = data.entries
+                            .firstWhere((entry) => entry.key == 'timeOfMessage')
+                            .value;
 
-                      var index = 0;
+                        var index = 0;
 
-                      if (!chatMessage.toString().contains('ЗАЯВКА УДАЛЕНА')) {
-                        return Column(
-                          children: [
-                            _ChatRowDriver(
-                                chatMessage: chatMessage,
-                                whatCarDriver: whatCarDriver,
-                                colorCarDriver: colorCarDriver,
-                                numberCarDriver: numberCarDriver),
-                            const Divider(
-                              color: Colors.black,
-                            ),
-                          ],
-                        );
-                      } else {
-                        chatStreamSubscription?.cancel().whenComplete(
-                              () => Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const NoteDeleteForDriverScreen(),
-                                ),
-                                (Route<dynamic> route) => false,
+                        if (!chatMessage
+                            .toString()
+                            .contains('ЗАЯВКА УДАЛЕНА')) {
+                          return Column(
+                            children: [
+                              _ChatRowDriver(
+                                  chatMessage: chatMessage,
+                                  whatCarDriver: whatCarDriver,
+                                  colorCarDriver: colorCarDriver,
+                                  numberCarDriver: numberCarDriver),
+                              const Divider(
+                                color: Colors.black,
                               ),
-                            );
-                        return const SizedBox.shrink();
-                      }
-                    },
-                  ).toList(),
-                  // !!!!!!!!!!!!
+                            ],
+                          );
+                        } else {
+                          chatStreamSubscription?.cancel().whenComplete(
+                                () => Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const NoteDeleteForDriverScreen(),
+                                  ),
+                                  (Route<dynamic> route) => false,
+                                ),
+                              );
+                          return const SizedBox.shrink();
+                        }
+                      },
+                    ).toList(),
+                    // !!!!!!!!!!!!
+                  ),
                 ),
-              ),
-            ],
-          ),
-        );
-      },
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

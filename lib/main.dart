@@ -1,5 +1,4 @@
-import 'package:chat_taxi/choose_city_screen.dart';
-import 'package:chat_taxi/main_screen.dart';
+import 'package:chat_taxi/select_city_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ChooseCityScreen(),
+      home: const SelectCityScreen(),
     );
   }
 }

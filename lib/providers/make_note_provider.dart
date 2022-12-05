@@ -31,6 +31,9 @@ class NoteFormModel {
   );
 
   void getMyNoteInfo(BuildContext context) async {
+    // final cityPrefs = await SharedPreferences.getInstance();
+    // var myCity = (cityPrefs.getString('myCity') ?? 'нет данных');
+
     final idNote = FirebaseAuth.instance.currentUser?.uid;
     final docRef = FirebaseFirestore.instance.collection("notes").doc(idNote);
     docRef.get().then(
@@ -99,6 +102,9 @@ class NoteFormModel {
   }
 
   void saveNote(BuildContext context) async {
+    // final cityPrefs = await SharedPreferences.getInstance();
+    // var myCity = (cityPrefs.getString('myCity') ?? 'нет данных');
+
     final uidPassanger = FirebaseAuth.instance.currentUser?.uid;
     final uidNote = uidPassanger;
 
@@ -116,6 +122,7 @@ class NoteFormModel {
       "passangerPrice": passangerPrice,
     });
 
+    // ignore: use_build_context_synchronously
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(

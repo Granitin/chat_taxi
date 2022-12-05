@@ -392,22 +392,22 @@ class ChatWidget extends StatefulWidget {
 class _ChatWidgetState extends State<ChatWidget> {
   final ScrollController chatScrollController = ScrollController();
 
-  _scrollToBottom() {
-    if (chatScrollController.hasClients) {
-      chatScrollController.initialScrollOffset;
-    }
-  }
+  // _scrollToBottom() {
+  //   if (chatScrollController.hasClients) {
+  //     chatScrollController.initialScrollOffset;
+  //   }
+  // }
 
-  @override
-  void initState() {
-    super.initState();
-    _scrollToBottom();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _scrollToBottom();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      flex: 3,
+      // flex: 3,
       child: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('notes')
