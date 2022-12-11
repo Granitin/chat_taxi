@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:chat_taxi/main_screen.dart';
 import 'package:chat_taxi/note_delete_for_driver_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -85,52 +86,53 @@ class NoteToChat extends StatelessWidget {
   }
 }
 
-class _DriverInputMessageWidget extends StatelessWidget {
-  const _DriverInputMessageWidget({
+class _NoteAboutChatWidget extends StatelessWidget {
+  const _NoteAboutChatWidget({
     Key? key,
-    required this.chatMessageController,
-    required this.uidNote,
+    required this.adressFrom,
+    required this.adressToGo,
+    required this.childrenCount,
+    required this.whatAnimal,
+    required this.remark,
+    required this.passangerPrice,
   }) : super(key: key);
 
-  final TextEditingController chatMessageController;
-  final uidNote;
+  final adressFrom;
+  final adressToGo;
+  final childrenCount;
+  final whatAnimal;
+  final remark;
+  final passangerPrice;
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      maxLines: null,
-      autofocus: true,
-      controller: chatMessageController,
-      decoration: InputDecoration(
-        labelText: "Водитель, ваше предложение",
-        suffixIcon: IconButton(
-          onPressed: () async {
-            var newChatMessage = chatMessageController.text;
-            final timeOfMessage = DateTime.now();
-
-            final prefs = await SharedPreferences.getInstance();
-            final whatCarDriver =
-                (prefs.getString('whatCarDriver') ?? 'нет данных');
-            final colorCarDriver =
-                (prefs.getString('colorCarDriver') ?? 'нет данных');
-            final numberCarDriver =
-                (prefs.getString('numberCarDriver') ?? 'нет данных');
-
-            await FirebaseFirestore.instance
-                .collection('notes')
-                .doc(uidNote)
-                .collection('chat_messages')
-                .add({
-              'new message': newChatMessage,
-              'whatCarDriver': whatCarDriver,
-              'colorCarDriver': colorCarDriver,
-              'numberCarDriver': numberCarDriver,
-              'timeOfMessage': timeOfMessage,
-            });
-
-            chatMessageController.clear();
-          },
-          icon: const Icon(Icons.send),
+    return Container(
+      color: Colors.yellow.shade300,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Text('uidNote - $uidNote'),
+              // Text('uidPassanger - $uidPassanger'),
+              // Text('uidDriver - $uidDriverToChat'),
+              Text('Адрес подачи - $adressFrom'),
+              Text('Конечный адрес - $adressToGo'),
+              Text('Дети до 7 лет - $childrenCount'),
+              Text('Звери - $whatAnimal'),
+              Text('Примечание - $remark'),
+              Text(
+                'Цена пассажира - $passangerPrice руб.',
+                style: const TextStyle(
+                  backgroundColor: Color.fromARGB(255, 241, 176, 176),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -159,15 +161,19 @@ class _ChatDriverWidgetState extends State<_ChatDriverWidget> {
         .orderBy('timeOfMessage', descending: true)
         .snapshots();
 
+    final ScrollController chatScrollController = ScrollController();
+
     StreamSubscription<dynamic>? chatStreamSubscription;
-    // final ScrollController chatScrollController = ScrollController();
 
     chatStreamSubscription = chatStream.listen(
-      ((event) {}),
+      ((event) {
+        AssetsAudioPlayer.playAndForget(
+          Audio('assets/sounds/ding.mp3'),
+        );
+      }),
     );
 
     return Expanded(
-      // flex: 3,
       child: StreamBuilder(
         stream: chatStream,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -180,11 +186,11 @@ class _ChatDriverWidgetState extends State<_ChatDriverWidget> {
             padding: const EdgeInsets.all(6.0),
             child: Column(
               children: [
-                SizedBox(
-                  height: 190,
+                Expanded(
+                  // height: 190,
                   child: ListView(
                     reverse: true,
-                    controller: ScrollController(initialScrollOffset: 0),
+                    controller: chatScrollController,
                     children: snapshot.data!.docs.map(
                       (DocumentSnapshot document) {
                         Map<String, dynamic> data =
@@ -299,53 +305,52 @@ class _ChatRowDriver extends StatelessWidget {
   }
 }
 
-class _NoteAboutChatWidget extends StatelessWidget {
-  const _NoteAboutChatWidget({
+class _DriverInputMessageWidget extends StatelessWidget {
+  const _DriverInputMessageWidget({
     Key? key,
-    required this.adressFrom,
-    required this.adressToGo,
-    required this.childrenCount,
-    required this.whatAnimal,
-    required this.remark,
-    required this.passangerPrice,
+    required this.chatMessageController,
+    required this.uidNote,
   }) : super(key: key);
 
-  final adressFrom;
-  final adressToGo;
-  final childrenCount;
-  final whatAnimal;
-  final remark;
-  final passangerPrice;
+  final TextEditingController chatMessageController;
+  final uidNote;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.yellow.shade300,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SizedBox(
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Text('uidNote - $uidNote'),
-              // Text('uidPassanger - $uidPassanger'),
-              // Text('uidDriver - $uidDriverToChat'),
-              Text('Адрес подачи - $adressFrom'),
-              Text('Конечный адрес - $adressToGo'),
-              Text('Дети до 7 лет - $childrenCount'),
-              Text('Звери - $whatAnimal'),
-              Text('Примечание - $remark'),
-              Text(
-                'Цена пассажира - $passangerPrice руб.',
-                style: const TextStyle(
-                  backgroundColor: Color.fromARGB(255, 241, 176, 176),
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
+    return TextFormField(
+      maxLines: null,
+      autofocus: true,
+      controller: chatMessageController,
+      decoration: InputDecoration(
+        labelText: "Водитель, ваше предложение",
+        suffixIcon: IconButton(
+          onPressed: () async {
+            var newChatMessage = chatMessageController.text;
+            final timeOfMessage = DateTime.now();
+
+            final prefs = await SharedPreferences.getInstance();
+            final whatCarDriver =
+                (prefs.getString('whatCarDriver') ?? 'нет данных');
+            final colorCarDriver =
+                (prefs.getString('colorCarDriver') ?? 'нет данных');
+            final numberCarDriver =
+                (prefs.getString('numberCarDriver') ?? 'нет данных');
+
+            await FirebaseFirestore.instance
+                .collection('notes')
+                .doc(uidNote)
+                .collection('chat_messages')
+                .add({
+              'new message': newChatMessage,
+              'whatCarDriver': whatCarDriver,
+              'colorCarDriver': colorCarDriver,
+              'numberCarDriver': numberCarDriver,
+              'timeOfMessage': timeOfMessage,
+            });
+
+            chatMessageController.clear();
+          },
+          icon: const Icon(Icons.send),
         ),
       ),
     );

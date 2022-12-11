@@ -26,10 +26,10 @@ class _PlaySoundsWidgetState extends State<PlaySoundsWidget> {
     //}));
     //openPlayer();
     _subscriptions.add(_assetsAudioPlayer.playlistAudioFinished.listen((data) {
-      print('playlistAudioFinished : $data');
+      debugPrint('playlistAudioFinished : $data');
     }));
     _subscriptions.add(_assetsAudioPlayer.audioSessionId.listen((sessionId) {
-      print('audioSessionId : $sessionId');
+      debugPrint('audioSessionId : $sessionId');
     }));
 
     // openPlayer();
@@ -46,7 +46,7 @@ class _PlaySoundsWidgetState extends State<PlaySoundsWidget> {
   @override
   void dispose() {
     _assetsAudioPlayer.dispose();
-    print('dispose');
+    debugPrint('dispose');
     super.dispose();
   }
 

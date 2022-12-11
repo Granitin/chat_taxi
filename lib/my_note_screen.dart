@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:chat_taxi/driver_chat_info.dart';
 import 'package:chat_taxi/main_screen.dart';
 import 'package:chat_taxi/make_new_note_screen.dart';
 import 'package:chat_taxi/my_note_redaction_screen.dart';
@@ -407,7 +408,6 @@ class _ChatWidgetState extends State<ChatWidget> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      // flex: 3,
       child: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('notes')
@@ -423,68 +423,74 @@ class _ChatWidgetState extends State<ChatWidget> {
           }
           return Padding(
             padding: const EdgeInsets.all(3.0),
-            child: SizedBox(
-              height: 180,
-              child: ListView(
-                reverse: true,
-                shrinkWrap: true,
-                controller: ScrollController(initialScrollOffset: 0),
-                children: snapshot.data!.docs.map(
-                  (DocumentSnapshot document) {
-                    Map<String, dynamic> data =
-                        document.data()! as Map<String, dynamic>;
+            child: ListView(
+              reverse: true,
+              controller: ScrollController(initialScrollOffset: 0),
+              children: snapshot.data!.docs.map(
+                (DocumentSnapshot document) {
+                  Map<String, dynamic> data =
+                      document.data()! as Map<String, dynamic>;
 
-                    var chatMessage = data.entries
-                        .firstWhere((entry) => entry.key == 'new message')
-                        .value;
-                    var whatCarDriver = data.entries
-                        .firstWhere((entry) => entry.key == 'whatCarDriver')
-                        .value;
+                  var chatMessage = data.entries
+                      .firstWhere((entry) => entry.key == 'new message')
+                      .value;
+                  var whatCarDriver = data.entries
+                      .firstWhere((entry) => entry.key == 'whatCarDriver')
+                      .value;
 
-                    var colorCarDriver = data.entries
-                        .firstWhere((entry) => entry.key == 'colorCarDriver')
-                        .value;
+                  var colorCarDriver = data.entries
+                      .firstWhere((entry) => entry.key == 'colorCarDriver')
+                      .value;
 
-                    var numberCarDriver = data.entries
-                        .firstWhere((entry) => entry.key == 'numberCarDriver')
-                        .value;
+                  var numberCarDriver = data.entries
+                      .firstWhere((entry) => entry.key == 'numberCarDriver')
+                      .value;
 
-                    // var index = 0;
-                    return Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 3,
-                              child: Text(
-                                '- $chatMessage  ',
-                                style: const TextStyle(fontSize: 12),
-                              ),
+                  // var index = 0;
+                  return Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              '- $chatMessage  ',
+                              style: const TextStyle(fontSize: 12),
                             ),
-                            Expanded(
-                              flex: 2,
-                              child: (whatCarDriver == null ||
-                                      colorCarDriver == null ||
-                                      numberCarDriver == null)
-                                  ? const SizedBox.shrink()
-                                  : Text(
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: (whatCarDriver == null ||
+                                    colorCarDriver == null ||
+                                    numberCarDriver == null)
+                                ? const SizedBox.shrink()
+                                : GestureDetector(
+                                    onTap: () => Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: ((context) =>
+                                            const DriverChatInfo()),
+                                      ),
+                                    ),
+                                    child: Text(
                                       '$whatCarDriver, $colorCarDriver, $numberCarDriver',
                                       style: const TextStyle(
-                                          fontSize: 10,
-                                          backgroundColor: Colors.yellow),
+                                        fontSize: 10,
+                                        backgroundColor: Colors.yellow,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
-                            ),
-                          ],
-                        ),
-                        const Divider(
-                          color: Colors.black,
-                        ),
-                      ],
-                    );
-                  },
-                ).toList(),
-                // !!!!!!!!!!!!
-              ),
+                                  ),
+                          ),
+                        ],
+                      ),
+                      const Divider(
+                        color: Colors.black,
+                      ),
+                    ],
+                  );
+                },
+              ).toList(),
+              // !!!!!!!!!!!!
             ),
           );
         },
