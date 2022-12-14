@@ -49,7 +49,7 @@ class _FreeNotesScreenBodyState extends State<FreeNotesScreenBody> {
   }
 
   final Stream<QuerySnapshot> notesSrteam = FirebaseFirestore.instance
-      .collection("notes")
+      .collection('notes')
       .orderBy('passangerPrice')
       .snapshots();
 

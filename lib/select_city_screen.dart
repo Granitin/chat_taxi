@@ -115,9 +115,9 @@ class _SelectCityBodyState extends State<SelectCityBody> {
             SizedBox(
               height: 300,
               width: 300,
-              child: Lottie.network(
+              child: Lottie.asset(
                 fit: BoxFit.fill,
-                'https://assets1.lottiefiles.com/datafiles/akoBQNZ4VfYIciL/data.json',
+                'assets/lottie/taxi.json',
               ),
             ),
             const Text('Для продолжения работы, выберите город:'),
@@ -192,9 +192,8 @@ class _SelectCityBodyState extends State<SelectCityBody> {
               SizedBox(
                 height: 300,
                 width: 300,
-                child: Lottie.network(
-                    'https://assets1.lottiefiles.com/datafiles/akoBQNZ4VfYIciL/data.json',
-                    fit: BoxFit.fill),
+                child:
+                    Lottie.asset('assets/lottie/taxi.json', fit: BoxFit.fill),
               ),
               SizedBox(
                 height: 300,

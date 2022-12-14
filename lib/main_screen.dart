@@ -296,7 +296,7 @@ class MakeNewNoteButton extends StatelessWidget {
           onPressed: () async {
             mainScreenModel.authThisPassanger();
 
-            // deleteMyNote();
+            deleteMyNote();
 
             Navigator.push(
               context,

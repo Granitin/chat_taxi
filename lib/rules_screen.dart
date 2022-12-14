@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:chat_taxi/main_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +8,7 @@ class Rules extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Правила Chat-Taxi'),
+        title: const Text('Правила ЧАТ-ТАКСИ'),
         backgroundColor: AppColors.darkColor,
       ),
       body: SafeArea(
@@ -22,7 +20,7 @@ class Rules extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Правила приложения Chat-Taxi:',
+                  'Правила приложения ЧАТ-ТАКСИ:',
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(
